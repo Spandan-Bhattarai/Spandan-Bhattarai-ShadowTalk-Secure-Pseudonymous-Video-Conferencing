@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Secure Messages{% endblock %}
+{% block content %}
+    <div class="mb-md-5 mt-md-4 pb-5">
+        <h2 class="fw-bold mb-4 text-uppercase">Secure Messages</h2>
+        
+        <!-- Message form -->
+        <div class="card bg-dark mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-white">Send Secure Meeting Code</h5>
+                <form action="{{ url_for('send_message') }}" method="POST">
+                    {{ form.csrf_token }}
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group mb-3">
+                        {{ form.recipient.label(class="text-white") }}
+                        {{ form.recipient(class="form-control", placeholder="Enter username") }}
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        {{ form.message.label(class="text-white") }}
+                        {{ form.message(class="form-control", rows=3, placeholder="Enter your message with meeting code") }}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Send Encrypted Message</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Messages -->
+        <h5 class="text-white mb-3">Your Messages</h5>
+        
+        {% if messages %}
+            <div class="list-group">
+                {% for message in messages %}
+                    <div class="list-group-item bg-dark text-white mb-2 border-light">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">From: {{ message.sender }}</h6>
+                            <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                        <p class="mb-1">{{ message.content }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-white-50">No messages yet.</p>
+        {% endif %}
+        
+        <div class="mt-4">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">Back to Dashboard</a>
+        </div>
+    </div>
+{% endblock %}
